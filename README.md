@@ -1,4 +1,4 @@
-# Star Wars RAG Bot
+# Movie_Expert_Bot
 
 This project is a Retrieval-Augmented Generation (RAG) chatbot that answers questions about Star Wars movies. It works by reading the scripts of the original Star Wars trilogy (A New Hope, The Empire Strikes Back, and Return of the Jedi) and using them as a knowledge base. When you ask a question, the bot searches the scripts for relevant information and uses it to give you an accurate answer.
 
