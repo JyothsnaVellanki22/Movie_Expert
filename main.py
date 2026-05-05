@@ -1,3 +1,8 @@
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
 import requests
 from bs4 import BeautifulSoup
 from langchain_core.documents import Document
@@ -11,14 +16,14 @@ from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.runnables import RunnablePassthrough
 from langchain_core.output_parsers import StrOutputParser
 
-from langchain_openai import OpenAIEmbeddings
+from langchain_huggingface import HuggingFaceEmbeddings
 
-embeddings = OpenAIEmbeddings(
-    model="text-embedding-3-small",
-    dimensions=1536,
-    encoding_format="float32",
+embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
+llm = ChatOpenAI(
+    model="openai/gpt-4o-mini",
+    openai_api_key=os.getenv("OPENROUTER_API_KEY"),
+    openai_api_base="https://openrouter.ai/api/v1",
 )
-llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
 
 PERSIST_PATH = "./qdrant_db"
 COLLECTION_NAME = "star-wars"
@@ -95,7 +100,11 @@ def main():
     """ 
 
     prompt = ChatPromptTemplate.from_template(template)
-    model = ChatOpenAI(model="gpt-4o-mini", temperature=0)
+    model = ChatOpenAI(
+        model="openai/gpt-4o-mini",
+        openai_api_key=os.getenv("OPENROUTER_API_KEY"),
+        openai_api_base="https://openrouter.ai/api/v1",
+    )
     
     rag_chain = (
         {"context": retriever, "question": RunnablePassthrough()}

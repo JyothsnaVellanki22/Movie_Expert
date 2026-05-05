@@ -1,3 +1,8 @@
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
@@ -7,7 +12,7 @@ from langchain_openai import ChatOpenAI
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.runnables import RunnablePassthrough
 from langchain_core.output_parsers import StrOutputParser
-from langchain_openai import OpenAIEmbeddings
+from langchain_huggingface import HuggingFaceEmbeddings
 
 app = FastAPI(title="Star Wars RAG API", description="API for Star Wars RAG Bot")
 
@@ -28,12 +33,12 @@ PERSIST_PATH = "./qdrant_db"
 COLLECTION_NAME = "star-wars"
 
 # Initialize Models identically to main.py
-embeddings = OpenAIEmbeddings(
-    model="text-embedding-3-small",
-    dimensions=1536,
-    encoding_format="float32",
+embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
+llm = ChatOpenAI(
+    model="openai/gpt-4o-mini",
+    openai_api_key=os.getenv("OPENROUTER_API_KEY"),
+    openai_api_base="https://openrouter.ai/api/v1",
 )
-llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
 
 # Initialize Qdrant Client
 # We simply load the existing database that main.py populated
